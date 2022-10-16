@@ -5,7 +5,16 @@ module.exports = {
   input: ['./main.js'],
   plugins: [
     babel({
-      plugins: [babelPluginImport({})],
+      plugins: [
+        babelPluginImport({
+          patterns: [
+            {
+              source: '@MyTestPackage',
+              match: ['@mui/material'],
+            },
+          ],
+        }),
+      ],
     }),
   ],
   external: ['react', 'react-dom', '@mui/material'],

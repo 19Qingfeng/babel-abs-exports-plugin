@@ -58,23 +58,6 @@ export const scanPckManager = async (files: string[]) => {
   }
 }
 
-
-// 查看是否是幽灵依赖 TODO: 其实不用
-// 1. 我优先查找 .pnpm
-// export const isGhostPeer = async (rootPath: string) => {
-//   const files = await scanTopLevelFiles(rootPath)
-//   const { pnpm, yarn, bun, npm } = await scanPckManager(files)
-//   // pnpm 不存在扁平化目录
-//   if (!pnpm) {
-//     return false
-//   }
-//   if (pnpm) {
-
-//     // 检查顶层是否存在 .npmrc
-//     // 两种情况 
-//   }
-// }
-
 const getPnpmPath = (packageName: string) => {
   const pnpmPath = path.join(process.cwd(), 'node_modules', '.pnpm', 'node_modules', packageName)
   // 检查目录是否存在
@@ -82,25 +65,25 @@ const getPnpmPath = (packageName: string) => {
   return isExist ? pnpmPath : null
 }
 
+/**
+ * 查找安装目录的包地址
+ * @param searchName 
+ * @returns 
+ */
 export const searchPackages = (searchName: string) => {
   let packagePath
   try {
-    // TODO: 这里得处理下
-    // TODO: 这里的模块路径查找不太对 normal search
-    packagePath = path.resolve(require.resolve(searchName), '../')
-
-    // 他妈的 寻找到 package.json 后
-
-    // 我只是需要对应的包路径即可
-    console.log('innerpackagePath', packagePath)
+    const packageMain = path.resolve(require.resolve(searchName))
+    // 包目录文件
+    packagePath = path.dirname(packageMain)
   } catch {
-    // search by pnpm path
     packagePath = getPnpmPath(searchName)
-    console.log('pnpm packagePath', packagePath)
   }
-  if (!packagePath) {
+
+  if (!packagePath || !fs.existsSync(packagePath)) {
     return null
   }
+
   return packagePath
 }
 
