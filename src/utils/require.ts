@@ -3,6 +3,7 @@ import { searchPackages } from "."
 import { Pattern, Patterns } from '../index'
 import { variableDeclaration, variableDeclarator, identifier, callExpression, stringLiteral, objectPattern, objectProperty } from '@babel/types'
 import chalk from 'chalk'
+import generate from '@babel/generator'
 
 /**
  * 寻找匹配 require 语的包
@@ -47,7 +48,6 @@ export const analyzeRequire = (objectPattern, pattern: Pattern, originPckName) =
   const { properties } = objectPattern
   const original = []
   const transform = []
-  // console.log(properties, 'aaaaaproperties')
   properties.forEach(property => {
     const { key, value } = property
     const originalName = key.name
@@ -122,14 +122,20 @@ export const generateRequireExp = (original, transform) => {
   }
 
   let replaceNode = []
-  console.log(transformExp, 'transformExp')
-  console.log(originExp, 'originExp')
+
   if (transformExp && transformExp.length > 0) {
     replaceNode = replaceNode.concat(transformExp)
   }
   if (originExp) {
     replaceNode = replaceNode.concat(originExp)
   }
+  // console.log(originExp, '看看生成后的代码')
+  console.log(generate(originExp), '原始保留的节点')
+  transformExp.forEach(node => {
+    console.log(generate(node), '转化后的节点')
+  })
+  console.log('结束一下')
+  // replaceNode
   return {
     replaceNode,
     transformNodes: transformExp,

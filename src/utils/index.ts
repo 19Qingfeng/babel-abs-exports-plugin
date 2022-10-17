@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import fs from 'fs'
 import path from 'path'
 // the order here matters, more specific one comes first
@@ -81,6 +82,9 @@ export const searchPackages = (searchName: string) => {
   }
 
   if (!packagePath || !fs.existsSync(packagePath)) {
+    console.log(
+      chalk.red(`Module not find ${searchName}.`)
+    )
     return null
   }
 

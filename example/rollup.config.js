@@ -1,10 +1,21 @@
 const { babel } = require('@rollup/plugin-babel');
 const babelPluginImport = require('../lib/index').default;
+const commonjs = require('@rollup/plugin-commonjs').default;
 
 module.exports = {
   input: ['./main.js'],
   plugins: [
+    // commonjs
+    commonjs(),
     babel({
+      presets: [
+        [
+          'babel-preset-env',
+          {
+            modules: false,
+          },
+        ],
+      ],
       plugins: [
         babelPluginImport({
           patterns: [
